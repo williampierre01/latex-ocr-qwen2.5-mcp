@@ -1,0 +1,3 @@
+datasets
+gradio_client
+Pillow
