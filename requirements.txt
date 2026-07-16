@@ -1,12 +1,8 @@
-gradio
-transformers
+gradio[mcp]>=5.34.0
+transformers>=4.45.0
 torch
 torchvision
 accelerate
 qwen-vl-utils
 spaces
-fastapi
-uvicorn
-mcp
-sse-starlette
-pillow
+Pillow
