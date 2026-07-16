@@ -24,7 +24,7 @@ from difflib import SequenceMatcher
 from typing import Optional
 
 from datasets import load_dataset
-from gradio_client import Client
+from gradio_client import Client, handle_file
 
 
 def normalize_latex(s: str) -> str:
@@ -103,7 +103,7 @@ def run_eval(
             t0 = time.time()
             error = None
             try:
-                pred_raw = client.predict(image=tmp_path, api_name="/predict")
+                pred_raw = client.predict(image=handle_file(tmp_path), api_name="/predict")
                 pred = normalize_latex(pred_raw)
             except Exception as e:
                 pred_raw = ""
