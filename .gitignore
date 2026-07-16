@@ -205,3 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Gradio (runtime, criado automaticamente ao rodar localmente)
+flagged/
+gradio_cached_examples/
+
+# Resultados de avaliação (eval.py) — variam a cada run, não devem ser versionados
+eval_output/
