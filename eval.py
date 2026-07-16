@@ -84,6 +84,10 @@ def run_eval(
     if n and n < len(ds):
         ds = ds.select(range(n))
 
+    if not hf_token:
+        print("Aviso: nenhum HF_TOKEN encontrado (env var ou --hf-token). "
+              "A cota anônima do ZeroGPU é bem menor e pode interromper o eval no meio do batch.")
+
     print(f"Conectando ao Space {space}...")
     client = Client(space, token=hf_token)
 
@@ -176,7 +180,11 @@ if __name__ == "__main__":
     )
     parser.add_argument("--split", default="test", help="Split do dataset")
     parser.add_argument("--n", type=int, default=30, help="Número máximo de amostras a avaliar")
-    parser.add_argument("--hf-token", default=None, help="Token HF, necessário se o Space for privado")
+    parser.add_argument(
+        "--hf-token",
+        default=os.environ.get("HF_TOKEN"),
+        help="Token HF. Se omitido, usa a variável de ambiente HF_TOKEN (recomendado, evita expor o token no comando/histórico).",
+    )
     parser.add_argument("--out-dir", default="./eval_output", help="Diretório de saída dos resultados")
     args = parser.parse_args()
 
