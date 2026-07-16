@@ -21,14 +21,14 @@ print("Modelo pronto!")
 
 
 def clean_latex_output(text: str) -> str:
-    """Remove blocos markdown e delimitadores \\[ \\] de display math do output do modelo."""
     pattern = r"```(?:latex)?(.*?)```"
     match = re.search(pattern, text, re.DOTALL)
     if match:
         text = match.group(1)
     text = text.strip()
-    # Remove apenas \[ no início e \] no fim, não em qualquer posição
     text = re.sub(r"^\\\[|\\\]$", "", text).strip()
+    text = re.sub(r"^\$\$|\$\$$", "", text).strip()
+    text = re.sub(r"^\$|\$$", "", text).strip()
     return text
 
 
