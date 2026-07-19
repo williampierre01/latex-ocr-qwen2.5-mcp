@@ -1,15 +1,37 @@
-run: |
-  git config --global --add safe.directory '*'
-  git config user.name "github-actions[bot]"
-  git config user.email "github-actions[bot]@users.noreply.github.com"
+name: Sync to Hugging Face Space
 
-  echo "*.pdf filter=lfs diff=lfs merge=lfs -text" > .gitattributes
+on:
+  push:
+    branches:
+      - main
 
-  git checkout --orphan temporary_clean_branch
-  git add --all
-  git commit -m "Sincronização forçada e limpa (LFS Fix)"
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
 
-  git remote add hf "https://${HF_USERNAME}:${HF_TOKEN}@huggingface.co/spaces/${HF_USERNAME}/${HF_SPACE_NAME}"
-  git push hf temporary_clean_branch:main --force 2>&1 | sed "s/${HF_TOKEN}/***/g"
+      - name: Push to Hugging Face Space
+        env:
+          HF_USERNAME: willp01
+          HF_SPACE_NAME: qwen-latex-ocr-mcp
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config --global --add safe.directory '*'
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-  echo "✅ Sincronização concluída com sucesso! Histórico limpo enviado."
+          echo "*.pdf filter=lfs diff=lfs merge=lfs -text" > .gitattributes
+
+          git checkout --orphan temporary_clean_branch
+          git add --all
+          git commit -m "Sincronização forçada e limpa (LFS Fix)"
+
+          git remote add hf "https://${HF_USERNAME}:${HF_TOKEN}@huggingface.co/spaces/${HF_USERNAME}/${HF_SPACE_NAME}"
+          git push hf temporary_clean_branch:main --force 2>&1 | sed "s/${HF_TOKEN}/***/g"
+
+          echo "✅ Sincronização concluída com sucesso! Histórico limpo enviado."
